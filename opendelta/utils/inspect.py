@@ -3,8 +3,19 @@ import torch
 import torch.nn as nn
 from typing import Optional
 import opendelta.utils.logging as logging
+import importlib
 
 logger = logging.get_logger(__name__)
+
+def is_torch_npu_available():
+    if importlib.util.find_spec("torch_npu") is None:
+        return False
+
+    import torch
+    import torch_npu 
+
+    return hasattr(torch, "npu") and torch.npu.is_available()
+
 
 
 def inspect_module_statistics(module: Optional[nn.Module]=None, verbose=True):
@@ -34,9 +45,14 @@ def inspect_module_statistics(module: Optional[nn.Module]=None, verbose=True):
 
     cudamem = 0
     maxcudamem = 0
-    for device_id in range(torch.cuda.device_count()):
-        cudamem += torch.cuda.memory_allocated(f"cuda:{device_id}")/1024**3
-        maxcudamem += torch.cuda.max_memory_allocated(f"cuda:{device_id}")/1024**3
+    if is_torch_npu_available():
+        for device_id in range(torch.npu.device_count()):
+            cudamem += torch.npu.memory_allocated(f"npu:{device_id}")/1024**3
+            maxcudamem += torch.npu.max_memory_allocated(f"npu:{device_id}")/1024**3
+    else:
+        for device_id in range(torch.cuda.device_count()):
+            cudamem += torch.cuda.memory_allocated(f"cuda:{device_id}")/1024**3
+            maxcudamem += torch.cuda.max_memory_allocated(f"cuda:{device_id}")/1024**3
     stat['cudamem'] = cudamem
     stat['maxcudamem'] = maxcudamem
 
