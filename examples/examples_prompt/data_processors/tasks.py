@@ -366,7 +366,7 @@ class SuperGLUECB(AbstractTask):
         if offline == '1':
             return datasets.load_from_disk(f"{self.data_args.datasets_saved_path}/super_glue.cb")[split]
         else:
-            return datasets.load_dataset('super_glue', 'cb', split=split, script_version="master")
+            return datasets.load_dataset('super_glue', 'cb', split=split)
 
 
 class SuperGLUECOPA(AbstractTask):

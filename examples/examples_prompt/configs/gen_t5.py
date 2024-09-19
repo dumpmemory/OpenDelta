@@ -3,6 +3,7 @@ import copy
 
 PATHBASE="/mnt/sfs_turbo/hsd/plm_cache/"
 # PATHBASE="/home/hushengding/plm_cache/"
+PATHBASE="/home/guozr/Downloads/"
 
 AllConfigs = {}
 
@@ -50,6 +51,7 @@ BaseConfigs['t5-base'] = {
                 "save_strategy": "steps",
                 "datasets_load_from_disk": True,
                 "datasets_saved_path": "/mnt/sfs_turbo/hsd/huggingface_datasets/saved_to_disk/",
+                "datasets_saved_path": f"{PATHBASE}huggingface_datasets/saved_to_disk/",
                 "backbone_model": "t5", # use in delta center,
                 "model_path_public": "t5-base", # use in delta center,
 
